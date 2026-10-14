@@ -1,0 +1,302 @@
+/* ================================================================= *
+   PCTE Alumni Talks - Modern Enterprise EdTech Stylesheet
+   ================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand Color Palette */
+  --pcte-red: #dc3545;
+  --pcte-red-dark: #b02a37;
+  --pcte-purple: #5b21b6;
+  --pcte-purple-light: #7c3aed;
+  --pcte-accent-lime: #ccff00;
+  
+  /* Layout & Neutral Colors */
+  --pcte-dark-nav: #090a0f;
+  --pcte-dark-bg: #0f111a;
+  --pcte-light-bg: #f8fafc;
+  --pcte-card-bg: #ffffff;
+  --pcte-text-dark: #0f172a;
+  --pcte-text-muted: #64748b;
+  
+  /* Modern Transitions & Geometry */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-pill: 50px;
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 20px 40px -10px rgba(91, 33, 182, 0.15);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: var(--pcte-text-dark);
+  background-color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================
+   1. Dark Enterprise Header & Navigation
+   ========================================== */
+.navbar {
+  background-color: var(--pcte-dark-nav) !important;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navbar-brand {
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -0.5px;
+  color: #ffffff !important;
+}
+
+.navbar-brand span.text-danger {
+  color: var(--pcte-red) !important;
+}
+
+.nav-link {
+  color: #cbd5e1 !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 8px 16px !important;
+  transition: var(--transition-smooth);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ffffff !important;
+}
+
+/* Header Buttons */
+.btn-nav-outline {
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-pill);
+  padding: 8px 22px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition-smooth);
+}
+
+.btn-nav-outline:hover {
+  background-color: #ffffff;
+  color: var(--pcte-dark-nav);
+}
+
+.btn-nav-primary {
+  background: linear-gradient(135deg, var(--pcte-purple-light), var(--pcte-purple));
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 8px 24px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+  transition: var(--transition-smooth);
+}
+
+.btn-nav-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+  color: #ffffff;
+}
+
+/* ==========================================
+   2. Modern Hero & Feature Sections
+   ========================================== */
+.hero-section {
+  background: radial-gradient(circle at 0% 0%, rgba(124, 58, 237, 0.08) 0%, rgba(255, 255, 255, 1) 70%);
+  padding: 90px 0 70px 0;
+  position: relative;
+}
+
+.hero-title {
+  font-weight: 800;
+  font-size: 3rem;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.hero-title .highlight-text {
+  color: var(--pcte-purple-light);
+  position: relative;
+  display: inline-block;
+}
+
+/* Rounded Corner Hero Images (Matching Screenshots) */
+.hero-image-frame {
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  border: 4px solid #ffffff;
+}
+
+/* Dark Accent Cards (Hero / CTA Section) */
+.dark-cta-card {
+  background: linear-gradient(135deg, #110d26 0%, #1a103c 100%);
+  border-radius: 28px;
+  padding: 50px;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-cta-card h2 {
+  font-weight: 800;
+  font-size: 2.5rem;
+}
+
+.dark-cta-card h2 .lime-accent {
+  color: var(--pcte-accent-lime);
+}
+
+/* ==========================================
+   3. Custom Buttons & Modern Form Controls
+   ========================================== */
+.btn-pcte-red {
+  background-color: var(--pcte-red);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 12px 28px;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.btn-pcte-red:hover {
+  background-color: var(--pcte-red-dark);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.btn-lime-submit {
+  background-color: var(--pcte-accent-lime);
+  color: #0f172a;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 14px 32px;
+  transition: var(--transition-smooth);
+}
+
+.btn-lime-submit:hover {
+  background-color: #b8e600;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(204, 255, 0, 0.3);
+}
+
+/* Glassmorphism Form Inputs */
+.dark-cta-card .form-control {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  padding: 12px 18px;
+}
+
+.dark-cta-card .form-control::placeholder {
+  color: #94a3b8;
+}
+
+.dark-cta-card .form-control:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--pcte-purple-light);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.25);
+}
+
+/* Search Bar Pill Style */
+.hero-input-group {
+  background: #f1f5f9;
+  border-radius: var(--radius-pill);
+  padding: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.hero-input-group .form-control {
+  background: transparent;
+  border: none;
+  padding-left: 20px;
+}
+
+.hero-input-group .form-control:focus {
+  box-shadow: none;
+}
+
+/* ==========================================
+   4. Cards & Component Geometry
+   ========================================== */
+.card {
+  border: 1px solid #f1f5f9;
+  border-radius: var(--radius-md);
+  background-color: var(--pcte-card-bg);
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-soft);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+/* Badges */
+.badge-pill-light {
+  background-color: rgba(124, 58, 237, 0.08);
+  color: var(--pcte-purple-light);
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  padding: 6px 16px;
+}
+
+/* ==========================================
+   5. Floating Action Button (FAB) Widget
+   ========================================== */
+.fab-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #10b981; /* WhatsApp Green */
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  z-index: 999;
+  transition: var(--transition-smooth);
+}
+
+.fab-widget:hover {
+  color: #ffffff;
+  background-color: #059669;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(16, 185, 129, 0.45);
+}
+
+/* ==========================================
+   6. High-Contrast Footer
+   ========================================== */
+footer {
+  background-color: var(--pcte-dark-nav);
+  color: #94a3b8;
+  padding: 70px 0 30px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+footer a {
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+footer a:hover {
+  color: #ffffff;
+  padding-left: 3px;
+}
