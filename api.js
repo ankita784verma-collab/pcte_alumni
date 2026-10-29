@@ -6,15 +6,23 @@
 (function (window) {
   // Determine API base URL:
   // 1. Explicit window.PCTE_API_URL or localStorage override
-  // 2. If running locally (localhost / 127.0.0.1) -> http://localhost:5000/api
-  // 3. Cloud production fallback -> Render backend URL
+  // 2. If running directly on the Render backend domain, use relative '/api'
+  // 3. If running locally (localhost / 127.0.0.1) -> http://localhost:5000/api
+  // 4. Cloud production fallback -> Render backend URL
+  const isRenderHost = window.location.hostname.includes('onrender.com');
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const defaultCloudUrl = 'https://pcte-alumni-backendpcte-alumni-backend.onrender.com/api';
   
+  let defaultBase = 'https://pcte-alumni-backendpcte-alumni-backend.onrender.com/api';
+  if (isRenderHost) {
+    defaultBase = '/api';
+  } else if (isLocal) {
+    defaultBase = 'http://localhost:5000/api';
+  }
+
   const BASE_URL = (
     window.PCTE_API_URL ||
     localStorage.getItem('pcte_api_url') ||
-    (isLocal ? 'http://localhost:5000/api' : defaultCloudUrl)
+    defaultBase
   ).replace(/\/$/, '');
 
   // Default seed fallback for offline / demo mode
@@ -28,7 +36,6 @@
   const API = {
     BASE_URL,
 
-    // Token & Auth storage
     getToken() {
       return localStorage.getItem('pcte_token');
     },
@@ -67,7 +74,6 @@
       window.location.href = 'index.html';
     },
 
-    // HTTP Helper
     async request(endpoint, options = {}) {
       const url = `${this.BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
       const headers = {
@@ -89,18 +95,15 @@
         }
         return data;
       } catch (err) {
-        // Network or server down error
         console.warn(`[PCTE API] Request to ${url} failed:`, err.message);
         throw err;
       }
     },
 
-    // Health check
     async checkHealth() {
       return this.request('/health');
     },
 
-    // Auth endpoints
     async register({ name, full_name, email, password, role, batch_program, job_title }) {
       const payload = {
         name: full_name || name,
@@ -153,7 +156,6 @@
       return res;
     },
 
-    // Alumni Directory
     async getAlumni() {
       try {
         const res = await this.request('/alumni');
@@ -200,7 +202,6 @@
       });
     },
 
-    // Events & RSVPs
     async getEvents() {
       try {
         const res = await this.request('/events');
@@ -225,7 +226,6 @@
       }
     },
 
-    // Contact & Leads
     async submitContact(data) {
       return this.request('/contact', {
         method: 'POST',
@@ -240,7 +240,6 @@
       });
     },
 
-    // Admin Stats
     async getAdminStats() {
       return this.request('/admin/stats');
     }
