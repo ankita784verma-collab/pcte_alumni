@@ -74,7 +74,9 @@
   <main class="flex-grow-1 py-5">
     <div class="container">
       <div class="row g-4" id="publicAlumniGrid">
-        <!-- Dynamically rendered via JavaScript -->
+        <div class="col-12 text-center text-muted py-5">
+          <span class="spinner-border spinner-border-sm me-2"></span> Loading alumni profiles...
+        </div>
       </div>
     </div>
   </main>
@@ -133,28 +135,31 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/main.js"></script>
   <script>
-    // Default seed records if localStorage is empty
-    const initialAlumniData = [
-      { id: 1, name: "Rahul Sharma", role: "Software Architect at TechCorp", batch: "Batch 2018 · B.Tech CSE", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop" },
-      { id: 2, name: "Priya Verma", role: "Financial Analyst, Global Bank", batch: "Batch 2020 · MBA Finance", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&h=200&fit=crop" },
-      { id: 3, name: "Amanpreet Singh", role: "Product Manager, SaaS Solutions", batch: "Batch 2019 · BBA", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop" },
-      { id: 4, name: "Neha Kapoor", role: "UI/UX Lead Designer", batch: "Batch 2021 · BCA", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop" }
-    ];
+    let loadedAlumni = [];
 
-    function renderDirectory(searchFilter = "") {
-      const stored = localStorage.getItem('pcte_alumni_data');
-      const alumniList = stored ? JSON.parse(stored) : initialAlumniData;
-      if (!stored) localStorage.setItem('pcte_alumni_data', JSON.stringify(initialAlumniData));
+    async function fetchAndRenderDirectory() {
+      try {
+        loadedAlumni = await API.getAlumni();
+      } catch (err) {
+        console.warn('Directory load fallback');
+        loadedAlumni = [];
+      }
+      filterAndRender("");
+    }
 
+    function filterAndRender(searchFilter = "") {
       const grid = document.getElementById('publicAlumniGrid');
       grid.innerHTML = "";
 
-      const filtered = alumniList.filter(item => 
-        item.name.toLowerCase().includes(searchFilter) ||
-        item.role.toLowerCase().includes(searchFilter) ||
-        item.batch.toLowerCase().includes(searchFilter)
-      );
+      const filtered = (loadedAlumni || []).filter(item => {
+        const name = (item.name || "").toLowerCase();
+        const role = (item.role || item.role_company || "").toLowerCase();
+        const batch = (item.batch || item.batch_degree || "").toLowerCase();
+        return name.includes(searchFilter) || role.includes(searchFilter) || batch.includes(searchFilter);
+      });
 
       if (filtered.length === 0) {
         grid.innerHTML = `<div class="col-12 text-center text-muted py-5">No matching alumni profiles found.</div>`;
@@ -162,18 +167,22 @@
       }
 
       filtered.forEach(item => {
-        const photo = item.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=dc3545&color=fff`;
+        const name = item.name || "Alumnus";
+        const role = item.role || item.role_company || "Alumni Member";
+        const batch = item.batch || item.batch_degree || "PCTE Graduate";
+        const photo = item.photo || item.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=dc3545&color=fff`;
+
         grid.innerHTML += `
           <div class="col-lg-4 col-md-6 searchable-card">
             <div class="card h-100 p-4 text-center border-0 shadow-sm">
               <div class="position-relative d-inline-block mx-auto mb-3">
-                <img src="${photo}" class="rounded-circle shadow-sm p-1 border border-danger-subtle" width="100" height="100" alt="${item.name}" style="object-fit: cover;">
+                <img src="${photo}" class="rounded-circle shadow-sm p-1 border border-danger-subtle" width="100" height="100" alt="${name}" style="object-fit: cover;">
                 <span class="position-absolute bottom-0 end-0 bg-success p-1 border border-white rounded-circle" title="Verified Alumni"></span>
               </div>
-              <h5 class="fw-bold mb-1">${item.name}</h5>
-              <p class="text-danger small fw-semibold mb-2">${item.role}</p>
+              <h5 class="fw-bold mb-1">${name}</h5>
+              <p class="text-danger small fw-semibold mb-2">${role}</p>
               <span class="badge badge-pill-light mb-4">
-                <i class="bi bi-mortarboard me-1"></i> ${item.batch}
+                <i class="bi bi-mortarboard me-1"></i> ${batch}
               </span>
               <div class="d-flex justify-content-center gap-2 mt-auto">
                 <a href="#" class="btn btn-nav-outline btn-sm rounded-circle px-2 text-dark border-secondary" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
@@ -187,24 +196,10 @@
 
     // Search filter listener
     document.getElementById('directorySearchInput').addEventListener('input', function(e) {
-      renderDirectory(e.target.value.toLowerCase());
+      filterAndRender(e.target.value.toLowerCase().trim());
     });
 
-    // Dynamic Navbar session check
-    document.addEventListener('DOMContentLoaded', () => {
-      renderDirectory();
-      const session = localStorage.getItem('pcte_logged_user');
-      if (session) {
-        const user = JSON.parse(session);
-        const slot1 = document.getElementById('authNavSlot1');
-        const slot2 = document.getElementById('authNavSlot2');
-        if (slot1 && slot2) {
-          const dashboardPage = user.role === 'Admin' ? 'dashboard-admin.html' : 'dashboard.html';
-          slot1.innerHTML = `<a class="btn btn-nav-outline text-warning fw-semibold" href="${dashboardPage}"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>`;
-          slot2.innerHTML = `<button onclick="localStorage.removeItem('pcte_logged_user'); location.reload();" class="btn btn-nav-primary">Logout</button>`;
-        }
-      }
-    });
+    document.addEventListener('DOMContentLoaded', fetchAndRenderDirectory);
   </script>
 </body>
 </html>

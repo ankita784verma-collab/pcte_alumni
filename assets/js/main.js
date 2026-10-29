@@ -1,5 +1,5 @@
 /**
- * PCTE Alumni Talks - Main Global Script
+ * PCTE Alumni Talks — Main Global Script
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,23 +7,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function syncNavbarAuth() {
-  const session = localStorage.getItem('pcte_logged_user');
+  let user = null;
+  try {
+    if (window.API && typeof API.getCurrentUser === 'function') {
+      user = API.getCurrentUser();
+    } else {
+      const stored = localStorage.getItem('pcte_logged_user');
+      user = stored ? JSON.parse(stored) : null;
+    }
+  } catch (e) {
+    user = null;
+  }
+
   const slot1 = document.getElementById('authNavSlot1') || document.querySelector('.navbar-nav .ms-lg-3');
   const slot2 = document.getElementById('authNavSlot2') || document.querySelector('.navbar-nav .ms-lg-2');
 
-  if (session && slot1 && slot2) {
-    const user = JSON.parse(session);
-    // Route to Admin Control Center or Student/Alumni Dashboard accordingly
+  if (user && slot1 && slot2) {
     const dashboardPage = (user.role === 'Admin') ? 'dashboard-admin.html' : 'dashboard.html';
 
-    // Replace Login button with Dashboard link
     slot1.innerHTML = `
       <a class="btn btn-nav-outline text-warning fw-semibold" href="${dashboardPage}">
         <i class="bi bi-speedometer2 me-1"></i> Dashboard
       </a>
     `;
 
-    // Replace Register button with Logout button
     slot2.innerHTML = `
       <button onclick="logoutUser()" class="btn btn-nav-primary">
         Logout
@@ -33,6 +40,11 @@ function syncNavbarAuth() {
 }
 
 function logoutUser() {
-  localStorage.removeItem('pcte_logged_user');
-  window.location.href = 'index.html';
+  if (window.API && typeof API.logout === 'function') {
+    API.logout();
+  } else {
+    localStorage.removeItem('pcte_logged_user');
+    localStorage.removeItem('pcte_token');
+    window.location.href = 'index.html';
+  }
 }
