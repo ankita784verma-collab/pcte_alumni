@@ -9,7 +9,7 @@
   // 2. If running locally (localhost / 127.0.0.1) -> http://localhost:5000/api
   // 3. Cloud production fallback -> Render backend URL
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const defaultCloudUrl = 'https://pcte-alumni-backend.onrender.com/api';
+  const defaultCloudUrl = 'https://pcte-alumni-backendpcte-alumni-backend.onrender.com/api';
   
   const BASE_URL = (
     window.PCTE_API_URL ||
